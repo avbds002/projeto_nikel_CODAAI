@@ -1,4 +1,4 @@
-import repository from "../database/repository.js";
+import repository from "../database/repository";
 export class UserController {
     async index(req, res) {
         try {
@@ -18,11 +18,11 @@ export class UserController {
             return res.status(201).json(create);
         }
         catch (error) {
-            res.status(500).json({ succes: false, msg: "Erro ao buscar usuários" });
+            res.status(500).json({ success: false, msg: "Erro ao buscar usuários" });
         }
     }
     async update(req, res) {
-        const { id } = req.params;
+        const id = req.params.id;
         const { name, password } = req.body;
         try {
             const updateDB = await repository.user.update({
@@ -35,7 +35,7 @@ export class UserController {
             return res.status(200).json(updateDB);
         }
         catch (error) {
-            res.status(500).json({ succes: false, msg: "Erro ao buscar usuários" });
+            res.status(500).json({ success: false, msg: "Erro ao buscar usuários" });
         }
     }
     async show(req, res) {
@@ -44,10 +44,10 @@ export class UserController {
             const user = repository.user.findUnique({
                 where: { id: Number(id) },
             });
-            return res.status(200).json(user);
+            return res.status(200).json({ success: true, data: user });
         }
         catch (error) {
-            res.status(500).json({ succes: false, msg: "Erro ao buscar usuários" });
+            res.status(500).json({ success: false, msg: "Erro ao buscar usuários" });
         }
     }
     async delete(req, res) {

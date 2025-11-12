@@ -1,5 +1,5 @@
 import type * as runtime from "@prisma/client/runtime/library";
-import type * as Prisma from "./internal/prismaNamespace.js";
+import type * as Prisma from "./internal/prismaNamespace";
 export type IntFilter<$PrismaModel = never> = {
     equals?: number | Prisma.IntFieldRefInput<$PrismaModel>;
     in?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel>;

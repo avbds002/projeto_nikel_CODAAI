@@ -2,6 +2,9 @@ import "dotenv/config";
 import express, { type Request, type Response } from "express";
 import cors from "cors";
 import { UserController } from "./controllers/user-controller";
+import userCreate from "./middleware/user-create-middleware";
+import userUpdate from "./middleware/user-update-middleware";
+import existUser from "./middleware/user-exist-middleware";
 
 const app = express();
 const PORT = 3333;
@@ -20,7 +23,7 @@ app.get("/test", (req: Request, res: Response) => {
 const controllerUser = new UserController();
 
 app.get("/users", controllerUser.index);
-app.get("/users/:id", controllerUser.show);
-app.post("/users", controllerUser.create);
-app.delete("/users/:id", controllerUser.delete);
-app.put("/users/:id", controllerUser.update);
+app.get("/users/:id", existUser, controllerUser.show);
+app.post("/users", userCreate, controllerUser.create);
+app.delete("/users/:id", existUser, controllerUser.delete);
+app.put("/users/:id", [userUpdate, existUser], controllerUser.update);

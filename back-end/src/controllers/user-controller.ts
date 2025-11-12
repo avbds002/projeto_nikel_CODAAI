@@ -22,7 +22,7 @@ export class UserController {
 
       return res.status(201).json(create);
     } catch (error) {
-      res.status(500).json({ success: false, msg: "Erro ao buscar usuários" });
+      res.status(500).json({ success: false, msg: "Erro ao criar usuários" });
     }
   }
 

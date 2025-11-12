@@ -1,6 +1,5 @@
 import type { Request, Response } from "express";
-import repository from "../database/repository.js";
-import { success } from "zod";
+import repository from "../database/repository";
 
 export class UserController {
   async index(req: Request, res: Response) {
@@ -27,9 +26,52 @@ export class UserController {
     }
   }
 
-  update() {}
+  async update(req: Request, res: Response) {
+    const { id } = req.params;
+    const { name, password } = req.body;
 
-  show() {}
+    try {
+      const updateDB = await repository.user.update({
+        where: { id: Number(id) },
+        data: {
+          name: name,
+          password: password,
+        },
+      });
+      return res.status(200).json(updateDB);
+    } catch (error) {
+      res.status(500).json({ succes: false, msg: "Erro ao buscar usuários" });
+    }
+  }
 
-  delete() {}
+  async show(req: Request, res: Response) {
+    const { id } = req.params;
+
+    try {
+      const user = repository.user.findUnique({
+        where: { id: Number(id) },
+      });
+
+      return res.status(200).json({ user });
+    } catch (error) {
+      res.status(500).json({ succes: false, msg: "Erro ao buscar usuários" });
+    }
+  }
+
+  async delete(req: Request, res: Response) {
+    const { id } = req.params;
+
+    try {
+      const deleteDB = repository.user.delete({
+        where: { id: Number(id) },
+      });
+      return res
+        .status(200)
+        .json({ success: true, msg: "usuario deletado com sucesso!" });
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ success: false, msg: "Erro ao deletar usuario" });
+    }
+  }
 }

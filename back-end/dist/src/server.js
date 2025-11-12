@@ -14,5 +14,8 @@ app.get("/test", (req, res) => {
 });
 const controllerUser = new UserController();
 app.get("/users", controllerUser.index);
+app.get("/users/:id", controllerUser.show);
 app.post("/users", controllerUser.create);
+app.delete("/users/:id", controllerUser.delete);
+app.put("/users/:id", controllerUser.update);
 //# sourceMappingURL=server.js.map

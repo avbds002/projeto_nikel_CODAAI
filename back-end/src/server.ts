@@ -1,10 +1,10 @@
 import "dotenv/config";
 import express, { type Request, type Response } from "express";
 import cors from "cors";
-import { UserController } from "./controllers/user-controller";
-import userCreate from "./middleware/user-create-middleware";
-import userUpdate from "./middleware/user-update-middleware";
-import existUser from "./middleware/user-exist-middleware";
+import { UserController } from "./controllers/user-controller.js";
+import userCreate from "./middleware/user-create-middleware.js";
+import userUpdate from "./middleware/user-update-middleware.js";
+import existUser from "./middleware/user-exist-middleware.js";
 
 const app = express();
 const PORT = 3333;

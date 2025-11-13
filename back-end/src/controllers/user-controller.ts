@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import repository from "../database/repository";
+import repository from "../database/repository.js";
 
 export class UserController {
   async index(req: Request, res: Response) {

@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import repository from "../database/repository";
+import repository from "../database/repository.js";
 
 async function existUser(req: Request, res: Response, next: NextFunction) {
   const id = req.params.id;

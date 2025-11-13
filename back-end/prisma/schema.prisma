@@ -5,8 +5,17 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  /*
+  Essa linha corrige o erro que estava no diretório generated do prisma e estava impossibilitando o
+  uso do npm run start
+
+  Após apagar o generated é só deixar o provider e trocar o import do prisma client
+
+  também é necessário apagar a pasta generated e colocar e usar o comando npx prisma generate novamente
+  Error [ERR_MODULE_NOT_FOUND]
+  */
+  provider = "prisma-client-js"
+  
 }
 
 datasource db {

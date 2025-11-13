@@ -9,6 +9,7 @@ import { TransactionController } from "./controllers/transactions-controller.js"
 import transactionCreate from "./middleware/transaction-create-middleware.js";
 import existTransaction from "./middleware/transaction-exist-middleware.js";
 import transactionUpdate from "./middleware/transaction-update-middleware.js";
+import { AuthController } from "./controllers/auth-controller.js";
 const app = express();
 const PORT = 3333;
 app.use(cors());
@@ -21,6 +22,7 @@ app.get("/test", (req, res) => {
 });
 const controllerUser = new UserController();
 const controllerTransaction = new TransactionController();
+const controllerAuth = new AuthController();
 //user routes
 app.get("/users", controllerUser.index);
 app.get("/users/:id", existUser, controllerUser.show);
@@ -33,4 +35,6 @@ app.get("/transactions/:id", existTransaction, controllerTransaction.show);
 app.post("/transactions", transactionCreate, controllerTransaction.create);
 app.delete("/transactions/:id", existTransaction, controllerTransaction.delete);
 app.put("/transactions/:id", [transactionUpdate, existTransaction], controllerTransaction.update);
+//login routes
+app.post("/login", controllerAuth.create);
 //# sourceMappingURL=server.js.map

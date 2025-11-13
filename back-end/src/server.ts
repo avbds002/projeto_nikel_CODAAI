@@ -9,6 +9,8 @@ import { TransactionController } from "./controllers/transactions-controller.js"
 import transactionCreate from "./middleware/transaction-create-middleware.js";
 import existTransaction from "./middleware/transaction-exist-middleware.js";
 import transactionUpdate from "./middleware/transaction-update-middleware.js";
+import { AuthController } from "./controllers/auth-controller.js";
+import auth from "./middleware/auth-middleware.js";
 
 const app = express();
 const PORT = 3333;
@@ -28,10 +30,16 @@ const controllerUser = new UserController();
 
 const controllerTransaction = new TransactionController();
 
+const controllerAuth = new AuthController();
+
 //user routes
+app.post("/users", userCreate, controllerUser.create);
+
+//Todas as rodas dessa linha para baixo irão precisar estar autenticadas
+app.use(auth);
+
 app.get("/users", controllerUser.index);
 app.get("/users/:id", existUser, controllerUser.show);
-app.post("/users", userCreate, controllerUser.create);
 app.delete("/users/:id", existUser, controllerUser.delete);
 app.put("/users/:id", [userUpdate, existUser], controllerUser.update);
 
@@ -45,3 +53,6 @@ app.put(
   [transactionUpdate, existTransaction],
   controllerTransaction.update
 );
+
+//login routes
+app.post("/login", controllerAuth.create);

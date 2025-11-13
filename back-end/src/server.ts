@@ -5,6 +5,7 @@ import { UserController } from "./controllers/user-controller.js";
 import userCreate from "./middleware/user-create-middleware.js";
 import userUpdate from "./middleware/user-update-middleware.js";
 import existUser from "./middleware/user-exist-middleware.js";
+import { TransactionController } from "./controllers/transactions-controller.js";
 
 const app = express();
 const PORT = 3333;
@@ -22,8 +23,14 @@ app.get("/test", (req: Request, res: Response) => {
 
 const controllerUser = new UserController();
 
+const controllerTransaction = new TransactionController();
+
+//user routes
 app.get("/users", controllerUser.index);
 app.get("/users/:id", existUser, controllerUser.show);
 app.post("/users", userCreate, controllerUser.create);
 app.delete("/users/:id", existUser, controllerUser.delete);
 app.put("/users/:id", [userUpdate, existUser], controllerUser.update);
+
+//transaction routes
+app.get("/transactions", controllerTransaction.index);

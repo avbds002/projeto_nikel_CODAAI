@@ -3,10 +3,10 @@ export class UserController {
     async index(req, res) {
         try {
             const users = await repository.user.findMany();
-            res.status(200).json({ succes: true, data: users });
+            res.status(200).json({ success: true, data: users });
         }
         catch (error) {
-            res.status(500).json({ succes: false, msg: "Erro ao buscar usuários" });
+            res.status(500).json({ success: false, msg: "Erro ao buscar usuários" });
         }
     }
     async create(req, res) {

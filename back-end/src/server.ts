@@ -34,3 +34,7 @@ app.put("/users/:id", [userUpdate, existUser], controllerUser.update);
 
 //transaction routes
 app.get("/transactions", controllerTransaction.index);
+app.get("/transactions/:id", controllerTransaction.show);
+app.post("/transactions", controllerTransaction.create);
+app.delete("/transactions/:id", controllerTransaction.delete);
+app.put("/transactions/:id", controllerTransaction.update);

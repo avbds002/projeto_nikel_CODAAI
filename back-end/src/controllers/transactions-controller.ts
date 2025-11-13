@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import repository from "../database/repository";
+import { da } from "zod/locales";
 
 export class TransactionController {
   async index(req: Request, res: Response) {
@@ -18,7 +19,7 @@ export class TransactionController {
     try {
       const { value, type, description, date } = req.body;
 
-      const transaction = repository.transaction.create({
+      const transaction = await repository.transaction.create({
         data: {
           value: Number(value),
           date,
@@ -27,9 +28,11 @@ export class TransactionController {
         },
       });
 
-      res
-        .status(200)
-        .json({ success: true, msg: "Lançamento realizado com sucesso!" });
+      res.status(200).json({
+        success: true,
+        msg: "Lançamento realizado com sucesso!",
+        data: transaction,
+      });
     } catch (error) {}
   }
 

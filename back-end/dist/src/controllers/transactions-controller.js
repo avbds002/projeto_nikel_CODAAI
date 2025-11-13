@@ -1,5 +1,4 @@
 import repository from "../database/repository.js";
-import { da } from "zod/locales";
 export class TransactionController {
   async index(req, res) {
     try {
@@ -29,8 +28,48 @@ export class TransactionController {
       });
     } catch (error) {}
   }
-  async show(req, res) {}
-  async update(req, res) {}
-  async delete(req, res) {}
+  async show(req, res) {
+    try {
+      const id = req.params.id;
+      const transaction = await repository.transaction.findUnique({
+        where: { id: Number(id) },
+      });
+      res.status(200).json({ success: true, data: transaction });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ success: true, msg: "Erro ao consultar transação pelo ID" });
+    }
+  }
+  async update(req, res) {
+    try {
+      const id = req.params.id;
+      const { value, date, type, description } = req.body;
+      const updateDB = repository.transaction.update({
+        where: { id: Number(id) },
+        data: {
+          value: Number(value),
+          date: new Date(date),
+          type: Number(type),
+          description,
+        },
+      });
+      return res.status(200).json({ success: true, data: updateDB });
+    } catch (error) {
+      res.status(500).json({
+        success: true,
+        msg: "Erro ao realizar atualização de transação",
+      });
+    }
+  }
+  async delete(req, res) {
+    const id = req.params.id;
+    const deleteTransaction = await repository.transaction.delete({
+      where: { id: Number(id) },
+    });
+    return res
+      .status(200)
+      .json({ success: true, msg: "Lançamento excluido com sucesso" });
+  }
 }
 //# sourceMappingURL=transactions-controller.js.map

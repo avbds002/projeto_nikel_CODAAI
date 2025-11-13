@@ -45,7 +45,7 @@ export class TransactionController {
     try {
       const id = req.params.id;
       const { value, date, type, description } = req.body;
-      const updateDB = repository.transaction.update({
+      const updateDB = await repository.transaction.update({
         where: { id: Number(id) },
         data: {
           value: Number(value),

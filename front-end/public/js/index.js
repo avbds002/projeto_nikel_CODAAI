@@ -1,7 +1,73 @@
+let logged = sessionStorage.getItem("logged");
+const session = localStorage.getItem("session");
+
 function saveAccount(data) {
   localStorage.setItem(data.login, JSON.stringify(data));
 }
 
+function getAccount(key) {
+  const account = localStorage.getItem(key);
+
+  if (account) {
+    return JSON.parse(account);
+  }
+
+  return "";
+}
+
+function checkLogged() {
+  if (session) {
+    sessionStorage.setItem("logged", session);
+    logged = session;
+  }
+
+  if (logged) {
+    saveSession(logged, session);
+    window.location.href = "home.html";
+  }
+}
+
+checkLogged();
+
+function saveSession(data, saveSession) {
+  if (saveSession) {
+    localStorage.setItem("session", data);
+  } else {
+    sessionStorage.setItem("logged", data);
+  }
+}
+
+//LOGAR NO SISTEMA
+document.addEventListener("submit", function (ev) {
+  if (ev.target.id === "login-form") {
+    ev.preventDefault();
+    ev.stopPropagation();
+
+    const email = document.getElementById("email-input").value;
+    const password = document.getElementById("password-input").value;
+    const checkSession = document.getElementById("session-check").checked;
+
+    const account = getAccount(email);
+
+    if (!account) {
+      alert(
+        "Essa conta não existe em nossa base de dados, verifique o usuário ou a senha"
+      );
+      return;
+    }
+
+    if (account) {
+      if (account.password !== password) {
+        alert("Usuário ou senha incorretos");
+      } else {
+        saveSession(email, checkSession);
+        window.location.href = "home.html";
+      }
+    }
+  }
+});
+
+//CRIAR CONTA
 document.addEventListener("submit", function (ev) {
   if (ev.target.id === "create-form") {
     ev.preventDefault();

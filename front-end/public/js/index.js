@@ -91,4 +91,11 @@ document.addEventListener("submit", function (ev) {
       });
     }
   }
+
+  const modalElement = document.getElementById("register-modal");
+  const modal = bootstrap.Modal.getInstance(modalElement);
+
+  if (modal) {
+    modal.hide();
+  }
 });

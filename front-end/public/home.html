@@ -133,9 +133,13 @@
                     <!--Valor de saída 1-->
                   </div>
                 </div>
-                <div class="col-12">
-                  <button type="button" class="btn button-default">
-                    Ver todos
+                <div class="col-12 mb-4">
+                  <button
+                    type="button"
+                    id="transactions-buttons"
+                    class="btn button-default"
+                  >
+                    Ver todas transações
                   </button>
                 </div>
               </div>
@@ -178,6 +182,7 @@
                   <label for="value-input" class="form-label">Valor</label>
                   <input
                     type="number"
+                    step="any"
                     class="form-control"
                     id="value-input"
                     aria-describedby="emailHelp"

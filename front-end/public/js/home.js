@@ -44,6 +44,11 @@ function logout() {
 }
 
 document.getElementById("button-logout").addEventListener("click", logout);
+document
+  .getElementById("transactions-buttons")
+  .addEventListener("click", function () {
+    window.location.href = "transactions.html";
+  });
 
 //Adicionar lançamento
 document

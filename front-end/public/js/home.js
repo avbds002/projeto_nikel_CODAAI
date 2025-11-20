@@ -1,45 +1,17 @@
-//const myModal = new boostrap.Modal("#transaction-modal");
 let logged = sessionStorage.getItem("logged");
 const session = localStorage.getItem("session");
+
 let data = {
   transactions: [],
 };
 
-document.getElementById("button-logout").addEventListener("click", logout);
+//Função para fechar a modal
+const modalElement = document.getElementById("transaction-modal");
+const modal = bootstrap.Modal.getInstance(modalElement);
 
-//ADICIONAR LANÇAMENTO
-function saveData(data) {
-  localStorage.setItem(data.login, JSON.stringify(data));
+if (modal) {
+  modal.hide();
 }
-
-document.addEventListener("submit", function (ev) {
-  if (ev.target.id === "transaction-form") {
-    ev.preventDefault();
-    ev.stopPropagation();
-
-    const value = parseFloat(document.getElementById("value-input").value);
-    const description = document.getElementById("description-input").value;
-    const date = document.getElementById("date-input").value;
-    const type = document.querySelector(
-      "input[name='type-input']:checked"
-    ).value;
-
-    data.transactions.unshift({
-      value: value,
-      description: description,
-      date: date,
-      type: type,
-    });
-
-    saveData(data);
-    //limpa o formulário após salvar os usuários
-    ev.target.reset();
-    //myModal.hide();
-    console.log(data.transactions);
-
-    alert("Lançamento adicionado com sucesso !");
-  }
-});
 
 function checkLogged() {
   if (session) {
@@ -53,12 +25,9 @@ function checkLogged() {
   }
 
   const dataUser = localStorage.getItem(logged);
-
   if (dataUser) {
     data = JSON.parse(dataUser);
   }
-
-  console.log(data);
 }
 
 checkLogged();
@@ -68,4 +37,36 @@ function logout() {
   localStorage.removeItem("session");
 
   window.location.href = "index.html";
+}
+
+document.getElementById("button-logout").addEventListener("click", logout);
+
+//Adicionar lançamento
+document
+  .getElementById("transaction-form")
+  .addEventListener("submit", function (ev) {
+    ev.preventDefault();
+
+    const value = parseFloat(document.getElementById("value-input").value);
+    const description = document.getElementById("description-input").value;
+    const date = document.getElementById("date-input").value;
+    const type = document.querySelector(
+      "input[name='type-input']:checked"
+    ).value;
+
+    data.transactions.unshift({
+      value,
+      description,
+      date,
+      type,
+    });
+
+    saveData(data);
+    ev.target.reset();
+
+    alert("Lançamento adicionado com sucesso!");
+  });
+
+function saveData(data) {
+  localStorage.setItem(data.login, JSON.stringify(data));
 }

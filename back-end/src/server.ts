@@ -36,6 +36,7 @@ const controllerAuth = new AuthController();
 app.post("/users", userCreate, controllerUser.create);
 
 //Todas as rodas dessa linha para baixo irão precisar estar autenticadas
+app.post("/login", controllerAuth.create);
 app.use(auth);
 
 app.get("/users", controllerUser.index);
@@ -53,6 +54,3 @@ app.put(
   [transactionUpdate, existTransaction],
   controllerTransaction.update
 );
-
-//login routes
-app.post("/login", controllerAuth.create);

@@ -31,9 +31,9 @@ checkLogged();
 
 function saveSession(data, saveSession) {
   if (saveSession) {
-    localStorage.setItem("session", data);
+    localStorage.setItem("session", JSON.stringify(data));
   } else {
-    sessionStorage.setItem("logged", data);
+    sessionStorage.setItem("logged", JSON.stringify(data));
   }
 }
 
@@ -54,7 +54,9 @@ document.addEventListener("submit", function (ev) {
       })
       .then(function (response) {
         console.log(response);
-        saveSession(email, checkSession);
+        saveSession({ email, password }, checkSession);
+
+        window.location.href = "home.html";
       })
       .catch(function (error) {
         console.log(error);

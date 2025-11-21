@@ -63,19 +63,26 @@ document
       "input[name='type-input']:checked"
     ).value;
 
-    data.transactions.unshift({
-      value,
-      description,
-      date,
-      type,
-    });
-
-    saveData(data);
-    ev.target.reset();
-
-    getCashIn();
-    getCashOut();
-    alert("Lançamento adicionado com sucesso!");
+    axios
+      .post("http://localhost:3333/transactions", {
+        value,
+        date,
+        type: Number(type),
+        description,
+      })
+      .then(function (response) {
+        // manipula a resposta da requisição
+        console.log(response);
+        ev.target.reset();
+        getCashIn();
+        getCashOut();
+        alert(response.data.msg);
+      })
+      .catch(function (error) {
+        // manipula os erros
+        console.log(error);
+        alert(error.response.data.msg);
+      });
   });
 
 //renderiza as entradas de cashIn

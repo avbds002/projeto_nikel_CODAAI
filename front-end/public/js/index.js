@@ -47,23 +47,34 @@ document.addEventListener("submit", function (ev) {
     const password = document.getElementById("password-input").value;
     const checkSession = document.getElementById("session-check").checked;
 
-    const account = getAccount(email);
+    axios
+      .post("localhost:3333/login", {
+        login: email,
+        password: password,
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 
-    if (!account) {
-      alert(
-        "Essa conta não existe em nossa base de dados, verifique o usuário ou a senha"
-      );
-      return;
-    }
+    // const account = getAccount(email);
+    // if (!account) {
+    //   alert(
+    //     "Essa conta não existe em nossa base de dados, verifique o usuário ou a senha"
+    //   );
+    //   return;
+    // }
 
-    if (account) {
-      if (account.password !== password) {
-        alert("Usuário ou senha incorretos");
-      } else {
-        saveSession(email, checkSession);
-        window.location.href = "home.html";
-      }
-    }
+    // if (account) {
+    //   if (account.password !== password) {
+    //     alert("Usuário ou senha incorretos");
+    //   } else {
+    //     saveSession(email, checkSession);
+    //     window.location.href = "home.html";
+    //   }
+    // }
   }
 });
 

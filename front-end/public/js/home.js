@@ -29,12 +29,23 @@ function checkLogged() {
     data = JSON.parse(dataUser);
   }
 
-  getCashIn();
-  getCashOut();
-  getTotal();
+  getTransactions();
 }
 
 checkLogged();
+
+function getUserHeader() {
+  let userHeader = null;
+  if (logged) {
+    const user = JSON.parse(logged);
+    userHeader = { user: user.email, password: user.password };
+  } else {
+    const user = JSON.parse(session);
+    userHeader = { user: user.email, password: user.password };
+  }
+
+  return userHeader;
+}
 
 function logout() {
   sessionStorage.removeItem("logged");
@@ -63,15 +74,6 @@ document
       "input[name='type-input']:checked"
     ).value;
 
-    let userHeader = null;
-    if (logged) {
-      const user = JSON.parse(logged);
-      userHeader = { user: user.email, password: user.password };
-    } else {
-      const user = JSON.parse(session);
-      userHeader = { user: user.email, password: user.password };
-    }
-
     axios
       .post(
         "http://localhost:3333/transactions",
@@ -82,17 +84,15 @@ document
           description,
         },
         {
-          headers: userHeader,
+          headers: getUserHeader(),
         }
       )
       .then(function (response) {
         // manipula a resposta da requisição
         console.log(response);
         ev.target.reset();
-        getCashIn();
-        getCashOut();
-        getTotal();
         alert(response.data.msg);
+        getTransactions();
       })
       .catch(function (error) {
         // manipula os erros
@@ -105,7 +105,7 @@ document
 function getCashIn() {
   const transactions = data.transactions;
 
-  const cashIn = transactions.filter((item) => item.type === "1");
+  const cashIn = transactions.filter((item) => item.type === 1);
 
   if (cashIn.length) {
     let cashInHtml = ``;
@@ -121,7 +121,7 @@ function getCashIn() {
       cashInHtml += `
         <div class="row mb-4">
                       <div class="col-12">
-                        <h3 class="fs-2">R$ ${cashIn[i].value.toFixed(2)}</h3>
+                        <h3 class="fs-2">R$ ${cashIn[i].value}</h3>
                         <div class="container p-0">
                           <div class="row">
                             <div class="col-12 col-md-8">
@@ -143,11 +143,33 @@ function getCashIn() {
   }
 }
 
+function getTransactions() {
+  axios
+    .get("http://localhost:3333/transactions", {
+      headers: getUserHeader(),
+    })
+    .then(function (response) {
+      // manipula a resposta da requisição
+      console.log(response);
+
+      data.transactions = response.data.data;
+
+      getCashIn();
+      getCashOut();
+      getTotal();
+    })
+    .catch(function (error) {
+      // manipula os erros
+      console.log(error);
+      alert(error.response.data.msg);
+    });
+}
+
 //renderiza as saídas de cashOut
 function getCashOut() {
   const transactions = data.transactions;
 
-  const cashOut = transactions.filter((item) => item.type === "2");
+  const cashOut = transactions.filter((item) => item.type === 2);
 
   if (cashOut.length) {
     let cashOutHtml = ``;
@@ -163,7 +185,7 @@ function getCashOut() {
       cashOutHtml += `
         <div class="row mb-4">
                       <div class="col-12">
-                        <h3 class="fs-2">R$ ${cashOut[i].value.toFixed(2)}</h3>
+                        <h3 class="fs-2">R$ ${cashOut[i].value}</h3>
                         <div class="container p-0">
                           <div class="row">
                             <div class="col-12 col-md-8">
@@ -192,14 +214,14 @@ function getTotal() {
   let total = 0;
 
   transactions.forEach((item) => {
-    if (item.type === "1") {
-      total += item.value;
+    if (item.type === 1) {
+      total += Number(item.value);
     } else {
-      total -= item.value;
+      total -= Number(item.value);
     }
   });
 
-  document.getElementById("total").innerHTML = `R$ ${total.toFixed(2)}`;
+  document.getElementById("total").innerHTML = `R$ ${total}`;
 }
 
 function saveData(data) {

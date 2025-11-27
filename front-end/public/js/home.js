@@ -63,19 +63,35 @@ document
       "input[name='type-input']:checked"
     ).value;
 
+    let userHeader = null;
+    if (logged) {
+      const user = JSON.parse(logged);
+      userHeader = { user: user.email, password: user.password };
+    } else {
+      const user = JSON.parse(session);
+      userHeader = { user: user.email, password: user.password };
+    }
+
     axios
-      .post("http://localhost:3333/transactions", {
-        value,
-        date,
-        type: Number(type),
-        description,
-      })
+      .post(
+        "http://localhost:3333/transactions",
+        {
+          value,
+          date: new Date(date),
+          type: Number(type),
+          description,
+        },
+        {
+          headers: userHeader,
+        }
+      )
       .then(function (response) {
         // manipula a resposta da requisição
         console.log(response);
         ev.target.reset();
         getCashIn();
         getCashOut();
+        getTotal();
         alert(response.data.msg);
       })
       .catch(function (error) {

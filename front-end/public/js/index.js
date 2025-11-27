@@ -5,16 +5,6 @@ function saveAccount(data) {
   localStorage.setItem(data.login, JSON.stringify(data));
 }
 
-function getAccount(key) {
-  const account = localStorage.getItem(key);
-
-  if (account) {
-    return JSON.parse(account);
-  }
-
-  return "";
-}
-
 function checkLogged() {
   if (session) {
     sessionStorage.setItem("logged", session);

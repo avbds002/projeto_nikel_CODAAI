@@ -32,7 +32,12 @@ export class TransactionController {
         msg: "Lançamento realizado com sucesso!",
         data: transaction,
       });
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(500)
+        .json({ success: false, msg: "Erro ao cadastrar lançamento" });
+    }
   }
 
   async show(req: Request, res: Response) {

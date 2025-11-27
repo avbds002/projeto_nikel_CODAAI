@@ -26,6 +26,19 @@ function checkLogged() {
 
 checkLogged();
 
+function getUserHeader() {
+  let userHeader = null;
+  if (logged) {
+    const user = JSON.parse(logged);
+    userHeader = { user: user.email, password: user.password };
+  } else {
+    const user = JSON.parse(session);
+    userHeader = { user: user.email, password: user.password };
+  }
+
+  return userHeader;
+}
+
 function logout() {
   sessionStorage.removeItem("logged");
   localStorage.removeItem("session");
@@ -35,6 +48,7 @@ function logout() {
 
 document.getElementById("button-logout").addEventListener("click", logout);
 
+//Adicionar lançamento
 //Adicionar lançamento
 document
   .getElementById("transaction-form")
@@ -48,46 +62,69 @@ document
       "input[name='type-input']:checked"
     ).value;
 
-    data.transactions.unshift({
-      value,
-      description,
-      date,
-      type,
-    });
-
-    saveData(data);
-    ev.target.reset();
-
-    getTransactions();
-
-    alert("Lançamento adicionado com sucesso!");
+    axios
+      .post(
+        "http://localhost:3333/transactions",
+        {
+          value,
+          date: new Date(date),
+          type: Number(type),
+          description,
+        },
+        {
+          headers: getUserHeader(),
+        }
+      )
+      .then(function (response) {
+        // manipula a resposta da requisição
+        console.log(response);
+        ev.target.reset();
+        alert(response.data.msg);
+        getTransactions();
+      })
+      .catch(function (error) {
+        // manipula os erros
+        console.log(error);
+        alert(error.response.data.msg);
+      });
   });
 
 function getTransactions() {
-  let transactions = data.transactions;
-  let transactionsHtml = ``;
+  axios
+    .get("http://localhost:3333/transactions", {
+      headers: getUserHeader(),
+    })
+    .then(function (response) {
+      // manipula a resposta da requisição
+      console.log(response);
 
-  if (transactions.length) {
-    transactions.forEach((item) => {
-      let type = "Entrada";
+      data.transactions = response.data.data;
 
-      if (item.type === "2") {
-        type = "Saída";
+      let transactionsHtml = ``;
+
+      if (data.transactions.length) {
+        data.transactions.forEach((item) => {
+          let type = "Entrada";
+
+          if (item.type === "2") {
+            type = "Saída";
+          }
+          transactionsHtml += `
+       <tr>
+             <th scope="row">${item.date}</th>
+             <td>${item.value}</td>
+             <td>${type}</td>
+             <td>${item.description}</td>
+       </tr>
+         `;
+        });
       }
-      transactionsHtml += `
-        <tr>
-            <th scope="row">${item.date}</th>
-            <td>${item.value.toFixed(2)}</td>
-            <td>${type}</td>
-            <td>${item.description}</td>
-        </tr>
-        `;
+
+      document.getElementById("transaction-list").innerHTML = transactionsHtml;
+    })
+    .catch(function (error) {
+      // manipula os erros
+      console.log(error);
+      alert(error.response.data.msg);
     });
-  }
-
-  document.getElementById("transaction-list").innerHTML = transactionsHtml;
-}
-
-function saveData(data) {
-  localStorage.setItem(data.login, JSON.stringify(data));
 }

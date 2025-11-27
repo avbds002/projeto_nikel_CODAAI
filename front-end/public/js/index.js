@@ -71,14 +71,23 @@ document.addEventListener("submit", function (ev) {
 
     if (password.length < 5) {
       alert("Preencha a senha com no mínimo 6 digitos");
-    } else {
-      alert("Conta criada com sucesso");
-      saveAccount({
+    }
+    axios
+      .post("http://localhost:3333/users", {
         login: email,
         password: password,
-        transactions: [],
+      })
+      .then(function (response) {
+        console.log(response);
+        //saveSession({ email, password }, checkSession);
+
+        alert(response.data.msg);
+      })
+      .catch(function (error) {
+        console.log(error);
+        const msg = error.response.data.msg;
+        alert(msg);
       });
-    }
   }
 
   const modalElement = document.getElementById("register-modal");

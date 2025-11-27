@@ -20,7 +20,9 @@ export class UserController {
         data: { login, password },
       });
 
-      return res.status(201).json(create);
+      return res
+        .status(201)
+        .json({ success: true, create, msg: "Usuário criado com sucesso !" });
     } catch (error) {
       res.status(500).json({ success: false, msg: "Erro ao criar usuários" });
     }
